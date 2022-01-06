@@ -37,4 +37,23 @@ deal_dict = {
         }
 }
 
+# вывод всего хранилища дел на экран:
 print(deal_dict)
+
+# программное добавление и удаление нового дела:
+new_deal = {
+    "description": "Покрасить забор",
+    "responsible": "Виктор",
+    "date": "01-05-2022"
+}
+
+# добавление
+deal_dict[5] = new_deal
+print(deal_dict[5])
+
+# удаление
+deal_dict.pop(5)
+
+
+for el in deal_dict.items():
+    print(el[1])
