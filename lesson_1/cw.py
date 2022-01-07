@@ -71,6 +71,10 @@ if a > 1:
     print("a is greater than 1")
     if a > 3:
         print("a is greater than 3")
+    elif a == 3:
+        print("a is 3")
+    else:
+        print("a is greater 1 and lower than 3")
 else:
     print("a is not greater than 1")
 
