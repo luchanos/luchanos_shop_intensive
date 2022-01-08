@@ -18,6 +18,76 @@ def show_all_deals():
         print(deal)
 
 
+def get_deal_by_id():
+    while True:
+        deal_id = input("Enter deal id [required]: ")
+        if not deal_id.isdigit():
+            print("Sorry, deal id should be a int number!")
+            continue  # уходим на следующую итерацию
+        break
+
+    deal_id = int(deal_id)
+    if deal_id not in all_deals:
+        print(f"The notebook has no deal with that id: {deal_id}")
+    else:
+        print(all_deals[deal_id])
+
+
+def delete_deal_by_id():
+    while True:
+        deal_id = input("Enter deal id [required]: ")
+        if not deal_id.isdigit():
+            print("Sorry, deal id should be a int number!")
+            continue  # уходим на следующую итерацию
+        break
+
+    deal_id = int(deal_id)
+    if deal_id not in all_deals:
+        print(f"The notebook has no deal with that id: {deal_id}")
+    else:
+        del all_deals[deal_id]
+
+    show_all_deals()
+
+
+def edit_deal_by_id():
+    """Задача со звёздочкой"""
+
+    edit_choice = {
+        "1": "description",
+        "2": "responsible",
+        "3": "date"
+    }
+
+    while True:
+        deal_id = input("Enter deal id [required]: ")
+        if not deal_id.isdigit():
+            print("Sorry, deal id should be a int number!")
+            continue  # уходим на следующую итерацию
+        break
+
+    deal_id = int(deal_id)
+    if deal_id not in all_deals:
+        print(f"The notebook has no deal with that id: {deal_id}")
+    else:
+        print(all_deals[deal_id])
+
+        while True:
+            modify = input("What do you want to edit?\n"
+                           "1. description\n"
+                           "2. responsible\n"
+                           "3. date\n")
+
+            if modify not in {"1", "2", "3"}:
+                print("Sorry, I don't understand you ;(")
+                continue
+
+            new_value = input(f"Please, enter new value for {edit_choice[modify]}: ")
+            all_deals[deal_id][edit_choice[modify]] = new_value
+            break
+    show_all_deals()
+
+
 def create_new_deal():
     global new_id
 
@@ -40,6 +110,8 @@ def create_new_deal():
     all_deals[new_id] = deal_dict
     new_id += 1
 
+    show_all_deals()
+
 
 # организуем большой бесконечный цикл для работы нашей программы
 while True:
@@ -55,7 +127,14 @@ while True:
         print("Sorry, I don't understand you ;(")
         continue  # уходим на следующую итерацию
 
-    create_new_deal()
-    show_all_deals()
+    if answer == "1":
+        create_new_deal()
+    elif answer == "2":
+        get_deal_by_id()
+    elif answer == "3":
+        edit_deal_by_id()
+    elif answer == "4":
+        delete_deal_by_id()
+
 
 print("End of program!")
