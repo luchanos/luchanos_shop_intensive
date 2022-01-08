@@ -14,9 +14,32 @@ valid_answers = {"1", "2", "3", "4"}
 
 
 def show_all_deals():
-    """Вывод всех дел на экран"""
     for deal in all_deals.items():
         print(deal)
+
+
+def create_new_deal():
+    global new_id
+
+    while True:
+        description = input("Enter deal description [required]: ")
+        if description == "":
+            print("Sorry, deal description should not be empty!")
+            continue  # уходим на следующую итерацию
+        break
+
+    responsible = input("Enter deal responsible person [or keep empty]: ")
+    date = input("Enter deal date [or keep empty]: ")
+
+    deal_dict = {
+        "description": description,
+        "responsible": responsible or None,
+        "date": date or None
+    }
+
+    all_deals[new_id] = deal_dict
+    new_id += 1
+
 
 # организуем большой бесконечный цикл для работы нашей программы
 while True:
@@ -32,21 +55,7 @@ while True:
         print("Sorry, I don't understand you ;(")
         continue  # уходим на следующую итерацию
 
-    description = input("Enter deal description [required]: ")
-    if description == "":
-        print("Sorry, deal description should not be empty!")
-        continue  # уходим на следующую итерацию
-
-    responsible = input("Enter deal responsible person [or keep empty]: ")
-    date = input("Enter deal date [or keep empty]: ")
-
-    deal_dict = {
-            "description": description,
-            "responsible": responsible or None,
-            "date": date or None
-        }
-
-    all_deals[new_id] = deal_dict
-    new_id += 1
+    create_new_deal()
+    show_all_deals()
 
 print("End of program!")
