@@ -18,15 +18,18 @@ def show_all_deals():
         print(deal)
 
 
-def get_deal_by_id():
+def get_deal_id_from_user():
     while True:
         deal_id = input("Enter deal id [required]: ")
         if not deal_id.isdigit():
             print("Sorry, deal id should be a int number!")
             continue  # уходим на следующую итерацию
         break
+    return deal_id
 
-    deal_id = int(deal_id)
+
+def get_deal_by_id():
+    deal_id = int(get_deal_id_from_user())
     if deal_id not in all_deals:
         print(f"The notebook has no deal with that id: {deal_id}")
     else:
@@ -34,14 +37,7 @@ def get_deal_by_id():
 
 
 def delete_deal_by_id():
-    while True:
-        deal_id = input("Enter deal id [required]: ")
-        if not deal_id.isdigit():
-            print("Sorry, deal id should be a int number!")
-            continue  # уходим на следующую итерацию
-        break
-
-    deal_id = int(deal_id)
+    deal_id = int(get_deal_id_from_user())
     if deal_id not in all_deals:
         print(f"The notebook has no deal with that id: {deal_id}")
     else:
@@ -59,14 +55,7 @@ def edit_deal_by_id():
         "3": "date"
     }
 
-    while True:
-        deal_id = input("Enter deal id [required]: ")
-        if not deal_id.isdigit():
-            print("Sorry, deal id should be a int number!")
-            continue  # уходим на следующую итерацию
-        break
-
-    deal_id = int(deal_id)
+    deal_id = int(get_deal_id_from_user())
     if deal_id not in all_deals:
         print(f"The notebook has no deal with that id: {deal_id}")
     else:
@@ -81,10 +70,11 @@ def edit_deal_by_id():
             if modify not in {"1", "2", "3"}:
                 print("Sorry, I don't understand you ;(")
                 continue
-
-            new_value = input(f"Please, enter new value for {edit_choice[modify]}: ")
-            all_deals[deal_id][edit_choice[modify]] = new_value
             break
+
+        new_value = input(f"Please, enter new value for {edit_choice[modify]}: ")
+        all_deals[deal_id][edit_choice[modify]] = new_value
+
     show_all_deals()
 
 
@@ -113,6 +103,14 @@ def create_new_deal():
     show_all_deals()
 
 
+CHOICE_MAPPER = {
+    "1": create_new_deal,
+    "2": get_deal_by_id,
+    "3": edit_deal_by_id,
+    "4": delete_deal_by_id
+}
+
+
 # организуем большой бесконечный цикл для работы нашей программы
 while True:
     answer = input("1. Create new deal [1]\n"
@@ -127,14 +125,10 @@ while True:
         print("Sorry, I don't understand you ;(")
         continue  # уходим на следующую итерацию
 
-    if answer == "1":
-        create_new_deal()
-    elif answer == "2":
-        get_deal_by_id()
-    elif answer == "3":
-        edit_deal_by_id()
-    elif answer == "4":
-        delete_deal_by_id()
+    # повышаем гибкость нашего кода
+    action_for_execution = CHOICE_MAPPER.get(answer)
+    if action_for_execution is not None:
+        action_for_execution()
 
 
 print("End of program!")
