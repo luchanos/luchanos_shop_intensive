@@ -10,24 +10,34 @@ from telebot import types
 with open("notebook.json", "r") as all_deals_file:
     all_deals = json.load(all_deals_file)  # тут будем хранить все наши дела
 
+with open("users.json", "r") as all_users_file:
+    all_users = json.load(all_users_file)  # тут будем хранить все наши дела
+
 new_id = int(max(all_deals.keys() or [0, ]))  # тут будем хранить айдишник для следующего дела
+new_user_id = int(max(all_users.keys() or [0, ]))  # тут будем хранить айдишник для следующего юзера
 valid_answers = {"1", "2", "3", "4"}
 
 TOKEN = "2104221180:AAGmwLGyb1m8fTnePreXS5bruo_HaW2Vj_w"
 
 bot = telebot.TeleBot(TOKEN)
 
-MAIN_MENU = "1. Create new deal: /create_new_deal\n" \
-            "2. Get deal by id: /get_deal_by_id\n" \
-            "3. Edit deal by id: /edit_deal\n" \
-            "4. Delete deal by id: /delete_deal_by_id\n"
+MAIN_MENU = "Hello %s! This is Family Notebook bot! Just put / to look commands list"
 
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    bot.reply_to(message, text=MAIN_MENU)
+    with open("users.json", "r") as all_users_read:
+        all_users = json.load(all_users_read)
+    if message.from_user.id not in all_users:
+        with open("users.json", "w") as all_users_write:
+            all_users[message.from_user.id] = {
+                "username": message.from_user.username
+            }
+            json.dump(all_users, all_users_write, indent=4, ensure_ascii=False)
+    bot.reply_to(message, text=MAIN_MENU % message.from_user.username)
 
 
+@bot.message_handler(commands=["show_all_deals"])
 def show_all_deals(message):
     res = ""
     with open("notebook.json", "r") as notebook_data:
