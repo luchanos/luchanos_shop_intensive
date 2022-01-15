@@ -21,11 +21,13 @@ TOKEN = "2104221180:AAGmwLGyb1m8fTnePreXS5bruo_HaW2Vj_w"
 
 bot = telebot.TeleBot(TOKEN)
 
-MAIN_MENU = "Hello %s! This is Family Notebook bot! Just put / to look commands list"
+GREETINGS = 'Hello %s! This is Family Notebook bot! Just put "/" (backslash) to look commands list'
 
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    """Check does the system has an information about user and register if it's not."""
+
     with open("users.json", "r") as all_users_read:
         all_users = json.load(all_users_read)
     if message.from_user.id not in all_users:
@@ -34,7 +36,7 @@ def start(message):
                 "username": message.from_user.username
             }
             json.dump(all_users, all_users_write, indent=4, ensure_ascii=False)
-    bot.reply_to(message, text=MAIN_MENU % message.from_user.username)
+    bot.reply_to(message, text=GREETINGS % message.from_user.username)
 
 
 @bot.message_handler(commands=["show_all_deals"])
@@ -77,7 +79,7 @@ def ask_and_delete(message):
         del deal_dict[deal_id]
 
         with open("notebook.json", "w") as all_deals_file:
-            json.dump(deal_dict, all_deals_file, indent=4, ensure_ascii=False)  # тут будем хранить все наши дела
+            json.dump(deal_dict, all_deals_file, indent=4, ensure_ascii=False)  # file to keep all deals
 
         show_all_deals(message)
 
@@ -97,7 +99,7 @@ def ask_new_value(message, deal_id, edit_key):
     deal_dict[deal_id][edit_key] = new_value
 
     with open("notebook.json", "w") as all_deals_file:
-        json.dump(deal_dict, all_deals_file, indent=4, ensure_ascii=False)  # тут будем хранить все наши дела
+        json.dump(deal_dict, all_deals_file, indent=4, ensure_ascii=False)  # file to keep all deals
 
     show_all_deals(message)
 
@@ -151,7 +153,7 @@ def set_new_deal(message, description, responsible):
     }
 
     with open("notebook.json", "w") as all_deals_file:
-        json.dump(deal_dict, all_deals_file, indent=4, ensure_ascii=False)  # тут будем хранить все наши дела
+        json.dump(deal_dict, all_deals_file, indent=4, ensure_ascii=False)  # file to keep all deals
 
     show_all_deals(message)
 
@@ -174,7 +176,7 @@ def create_new_deal(message):
     bot.register_next_step_handler(message, ask_description)
 
 
-# организуем большой бесконечный цикл для работы нашей программы
+# infinite cycle to perform infinite work of the bot
 while True:
     try:
         print("Starting bot!")
